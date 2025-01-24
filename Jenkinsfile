@@ -24,10 +24,13 @@ pipeline {
         stage('Sonarqube') {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                    -Dsonar.java.binaries=. \
-                    -Dsonar.projectKey=Ekart-Muthu \
-                    -Dsonar.projectName=Ekart-Muthu '''
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                -Dsonar.java.binaries=. \
+                -Dsonar.projectKey=Ekart-Muthu \
+                -Dsonar.projectName=Ekart-Muthu \
+                -Dsonar.login=$SONAR_TOKEN '''
+            }
                 }
             }
         }
